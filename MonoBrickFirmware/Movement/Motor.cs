@@ -33,7 +33,7 @@ namespace MonoBrickFirmware.Movement
 		/// <value>
 		/// <c>true</c> if reverse; otherwise, <c>false</c>.
 		/// </value>
-		private bool Reverse {
+		public bool Reverse {
 			get {
 				return reverse;
 			} 
