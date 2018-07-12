@@ -47,12 +47,7 @@ namespace  EV3MonoBrickSimulator.Stub
 			return GetKeypress(new CancellationToken(false));	
 		}
 
-		public void LedPattern (int pattern)
-		{
-
-		}
-
-		public void EnterPressed()
+        public void EnterPressed()
 		{
 			state = state | Buttons.ButtonStates.Enter;
 		}
@@ -103,6 +98,9 @@ namespace  EV3MonoBrickSimulator.Stub
 			state &= ~Buttons.ButtonStates.Escape;	
 		}
 
-	}
+        public void LedPattern(LedColor color, LedEffect effect)
+        {
+        }
+    }
 }
 

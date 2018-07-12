@@ -26,7 +26,7 @@ namespace MonoBrickFirmware.Display.Menus
 				Lcd.WriteText(Font.MediumFont, new Point(0,0), "Shutting down...", true);
 				Lcd.Update();
 
-				Buttons.LedPattern(2);
+				Buttons.LedPattern(LedColor.Red, LedEffect.Normal);
 				Brick.TurnOff ();
 			} 
 		}

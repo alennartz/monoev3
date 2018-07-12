@@ -54,7 +54,7 @@ namespace MonoBrickFirmware.Display.Menus
 				Lcd.Clear ();
 				Lcd.WriteText (Font.MediumFont, new Point (0, 0), "Shutting down...", true);
 				Lcd.Update ();
-				Buttons.LedPattern (2);
+				Buttons.LedPattern (LedColor.Red, LedEffect.Normal);
 				Brick.TurnOff ();
 				var whyAreYouHereDialog = new InfoDialog ("Cut the power", "Reboot failed");
 				whyAreYouHereDialog.Show ();

@@ -56,8 +56,9 @@ namespace MonoBrickFirmware.UserInput
 		}
 
 
-		public void LedPattern (int pattern)
-		{
+		public void LedPattern(LedColor color, LedEffect effect)
+        {
+            int pattern = (int)color + (int)effect;
 			byte[] cmd = new byte[2];
 			cmd [0] = (byte)('0' + pattern);
 			dev.Write (cmd);
