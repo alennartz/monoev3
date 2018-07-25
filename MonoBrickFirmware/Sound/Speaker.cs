@@ -173,16 +173,25 @@ namespace MonoBrickFirmware.Sound
 		/// </summary>
 		public void Click (int volume)
 		{
-			//Click(clickDurationMs, Volume);
+			Click(clickDurationMs, Volume);
 		}
-		
-		/// <summary>
-		/// Play a sound file.
-		/// </summary>
-		/// <param name="name">Name the name of the file to play</param>
-		/// <param name="volume">Volume.</param>
-		/// <param name="repeat">If set to <c>true</c> the file will play in a loop</param>
-		public void PlaySoundFile(string name){
+
+
+        /// <summary>
+        /// Make the brick click
+        /// </summary>
+        public void Click(UInt16 durationMs, int volume)
+        {
+            PlayTone(clickFrequency, durationMs, Volume);
+        }
+
+        /// <summary>
+        /// Play a sound file.
+        /// </summary>
+        /// <param name="name">Name the name of the file to play</param>
+        /// <param name="volume">Volume.</param>
+        /// <param name="repeat">If set to <c>true</c> the file will play in a loop</param>
+        public void PlaySoundFile(string name){
 			PlaySoundFile(name, Volume);
 		}
 
