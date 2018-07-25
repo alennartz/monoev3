@@ -143,6 +143,13 @@ namespace MonoBrick
             return Path.Combine(projectPath, output);
         }
 
+
+        private bool IsDebugBuild()
+        {
+            SolutionConfiguration buildCfg = Dte.Solution.SolutionBuild.ActiveConfiguration;
+            return string.Equals(buildCfg.Name, "Debug", StringComparison.InvariantCultureIgnoreCase);
+        }
+
         private List<string> GetFilesToUpload(Project p)
         {
             string outputFolder = GetOutputFolder(p);
@@ -150,10 +157,12 @@ namespace MonoBrick
             List<string> filesToUpload = new List<string>();
             if (Directory.Exists(outputFolder))
             {
+                bool isDebug = false;// IsDebugBuild(); //uploading pdbs does not let you have line numbers in exceptions...
+
                 foreach (var item in Directory.EnumerateFiles(outputFolder))
                 {
                     var ex = Path.GetExtension(item);
-                    if (ex == ".exe" || ex == ".dll")
+                    if (ex == ".exe" || ex == ".dll" || (ex == ".pdb" && isDebug))
                     {
                         filesToUpload.Add(item);
                     }

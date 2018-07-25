@@ -313,7 +313,13 @@ namespace MonoBrickFirmware.Sound
 		/// Stops all sound playback.
 		/// </summary>
 		public void StopSoundPlayback(){
-			/*var command = new Command(0,0,123,reply);
+
+            var command = new MonoBrickFirmware.Tools.ByteArrayCreator();
+         //   command.Append(KernelByteCodes.Sound);
+            command.Append(AudioMode.Break);
+            soundDevice.Write(command.Data);
+
+            /*var command = new Command(0,0,123,reply);
 			command.Append(ByteCodes.Sound);
 			command.Append(SoundSubCodes.Break);
 			connection.Send(command);
@@ -321,7 +327,7 @@ namespace MonoBrickFirmware.Sound
 				var brickReply = connection.Receive();
 				Error.CheckForError(brickReply,123);
 			}*/
-		}
+        }
 		
 		
 		
