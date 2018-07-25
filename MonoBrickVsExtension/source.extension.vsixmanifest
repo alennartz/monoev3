@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="MonoBrick.e9fb4b7f-6fb0-424e-94aa-d5d19ae3ded4" Version="1.1.3" Language="en-US" Publisher="alennartz" />
+        <Identity Id="MonoBrick.e9fb4b7f-6fb0-424e-94aa-d5d19ae3ded4" Version="1.1.4" Language="en-US" Publisher="alennartz" />
         <DisplayName>MonoBrick</DisplayName>
         <Description xml:space="preserve">Adds helper commands for uploading programs built against the MonoBrick firmware to the Ev3</Description>
         <Icon>Resources\monobrickIconLarge.png</Icon>

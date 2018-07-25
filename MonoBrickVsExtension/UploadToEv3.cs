@@ -205,20 +205,27 @@ namespace MonoBrick
 
             ThreadPool.QueueUserWorkItem(_ =>
             {
-                using (ScpClient client = new ScpClient(new ConnectionInfo("10.0.1.1", "root", new PasswordAuthenticationMethod("root", ""))))
+                try
                 {
-                    client.Connect();
-                    //make sure folder exists
-                    client.Upload(new DirectoryInfo(m_emptyFolder), dest);
-                    foreach (var item in files)
+                    using (ScpClient client = new ScpClient(new ConnectionInfo("10.0.1.1", "root", new PasswordAuthenticationMethod("root", ""))))
                     {
-                        var fi = new FileInfo(item);
-                        WriteLine($"uploading {fi.Name} ...");
-                        client.Upload(fi, $"{dest}/{fi.Name}");
-                    }
+                        client.Connect();
+                        //make sure folder exists
+                        client.Upload(new DirectoryInfo(m_emptyFolder), dest);
+                        foreach (var item in files)
+                        {
+                            var fi = new FileInfo(item);
+                            WriteLine($"uploading {fi.Name} ...");
+                            client.Upload(fi, $"{dest}/{fi.Name}");
+                        }
 
+                    }
+                    WriteLine($"[{DateTime.Now:HH:mm:ss.fff}] Upload finished");
                 }
-                WriteLine($"[{DateTime.Now:HH:mm:ss.fff}] Upload finished");
+                catch (Exception ex)
+                {
+                    ShowErrorMessage("Error Uploading", ex.ToString());
+                }
             });
         }
     }

@@ -61,14 +61,39 @@ namespace MonoBrickFirmware.Sound
 			PlayTone(frequency,durationMs, Volume);
 		}
 
-		/// <summary>
-		/// Play a tone.
-		/// </summary>
-		/// <param name="volume">Volume.</param>
-		/// <param name="frequency">Frequency of the tone</param>
-		/// <param name="durationMs">Duration in ms.</param>
-		/// <param name="durationMs">Volume .</param>
-		public void PlayTone(UInt16 frequency, UInt16 durationMs, int volume){
+        /// <summary>
+        /// Play a tone.
+        /// </summary>
+        /// <param name="volume">Volume.</param>
+        /// <param name="frequency">Frequency of the tone</param>
+        /// <param name="durationMs">Duration in ms.</param>
+        /// <param name="wait">Wait for the tone to finish playing</param>
+        public void PlayTone(UInt16 frequency, UInt16 durationMs, bool wait)
+        {
+            PlayTone(frequency, durationMs, Volume, wait);
+        }
+
+        /// <summary>
+        /// Play a tone.
+        /// </summary>
+        /// <param name="volume">Volume.</param>
+        /// <param name="frequency">Frequency of the tone</param>
+        /// <param name="durationMs">Duration in ms.</param>
+        /// <param name="durationMs">Volume .</param>
+ 		public void PlayTone(UInt16 frequency, UInt16 durationMs, int volume)
+        {
+            PlayTone(frequency, durationMs, volume, true);
+        }
+
+        /// <summary>
+        /// Play a tone.
+        /// </summary>
+        /// <param name="volume">Volume.</param>
+        /// <param name="frequency">Frequency of the tone</param>
+        /// <param name="durationMs">Duration in ms.</param>
+        /// <param name="durationMs">Volume .</param>
+        /// <param name="wait">Wait for the tone to finish playing</param>
+        public void PlayTone(UInt16 frequency, UInt16 durationMs, int volume, bool wait){
 			if (volume < 0)
 		    	volume = -volume;
 			var command = new MonoBrickFirmware.Tools.ByteArrayCreator();
@@ -76,10 +101,12 @@ namespace MonoBrickFirmware.Sound
 			command.Append((byte)volume);
 			command.Append(frequency);
 			command.Append(durationMs);
-			command.Print();
 			soundDevice.Write(command.Data);
-			System.Threading.Thread.Sleep(durationMs);
-		}
+            if (wait)
+            {
+                System.Threading.Thread.Sleep(durationMs);
+            }
+        }
 		
 		/// <summary>
 		/// Make the brick beep
