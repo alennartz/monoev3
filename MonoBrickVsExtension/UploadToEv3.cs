@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Globalization;
 using System.IO;
+using System.Threading;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
@@ -55,7 +56,12 @@ namespace MonoBrick
 
 
             m_emptyFolder = GetTemporaryDirectory();
-            
+
+            m_outputWindow = new Lazy<OutputWindowPane>(() =>
+            {
+                OutputWindow win = Dte.Windows.Item(EnvDTE.Constants.vsWindowKindOutput).Object as OutputWindow;
+                return win.OutputWindowPanes.Add("MonoBrick Ev3");
+            });
         }
 
         private string m_emptyFolder;
@@ -99,9 +105,16 @@ namespace MonoBrick
             Instance = new UploadToEv3(package);
         }
 
+        private void WriteLine(string text) => Write(text + Environment.NewLine);
+        private void Write(string text)
+        {
+            var w = m_outputWindow.Value;
+            w.OutputString(text);
+        }
 
         private void BuildProject()
         {
+            WriteLine("Building project");
             Dte.Solution.SolutionBuild.Build(true);
         }
 
@@ -150,6 +163,7 @@ namespace MonoBrick
         }
 
 
+
         private void ShowErrorMessage(string title, string message)
         {
             VsShellUtilities.ShowMessageBox(
@@ -162,6 +176,9 @@ namespace MonoBrick
 
         }
 
+        private Lazy<OutputWindowPane> m_outputWindow;
+
+ 
         /// <summary>
         /// This function is the callback used to execute the command when the menu item is clicked.
         /// See the constructor to see how the menu item is associated with this function using
@@ -171,13 +188,7 @@ namespace MonoBrick
         /// <param name="e">Event args.</param>
         private void MenuItemCallback(object sender, EventArgs e)
         {
-            //  string message = string.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", this.GetType().FullName);
-            //  string title = "UploadToEv3";
-
-            //// Show a message box to prove we were here
-
             BuildProject();
-
 
             var proj = GetStartupProject();
             if (proj == null)
@@ -186,24 +197,29 @@ namespace MonoBrick
                 return;
             }
 
-
             var files = GetFilesToUpload(proj);
+
             var dest = $"/home/root/apps/{GetEv3ProgramFolderName(proj)}";
-           
-            
-            using (ScpClient client = new ScpClient(new ConnectionInfo("10.0.1.1", "root", new PasswordAuthenticationMethod("root", ""))))
+
+            WriteLine($"will upload {files.Count} files to: '{dest}'");
+
+            ThreadPool.QueueUserWorkItem(_ =>
             {
-                client.Connect();
-                //make sure folder exists
-                client.Upload(new DirectoryInfo(m_emptyFolder), dest);
-                foreach (var item in files)
+                using (ScpClient client = new ScpClient(new ConnectionInfo("10.0.1.1", "root", new PasswordAuthenticationMethod("root", ""))))
                 {
-                    client.Upload(new FileInfo(item), $"{dest}/{Path.GetFileName(item)}");
+                    client.Connect();
+                    //make sure folder exists
+                    client.Upload(new DirectoryInfo(m_emptyFolder), dest);
+                    foreach (var item in files)
+                    {
+                        var fi = new FileInfo(item);
+                        WriteLine($"uploading {fi.Name} ...");
+                        client.Upload(fi, $"{dest}/{fi.Name}");
+                    }
+
                 }
-
-            }
-
-
+                WriteLine($"[{DateTime.Now:HH:mm:ss.fff}] Upload finished");
+            });
         }
     }
 }

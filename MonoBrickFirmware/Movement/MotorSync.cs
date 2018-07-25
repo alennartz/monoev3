@@ -48,15 +48,30 @@ namespace MonoBrickFirmware.Movement
 			output.SetStepSync(speed, turnRatio, steps, brake);
 			return  WaitForMotorsToStop();
 		}
-		
-		/// <summary>
-		/// Syncronise time between two motors
-		/// </summary>
-		/// <param name="speed">Speed of the motors.</param>
-		/// <param name="turnRatio">Turn ratio (-200 to 200).</param>
-		/// <param name="timeInMs">Time in ms to move.</param>
-		/// <param name="brake">If set to <c>true</c> motors will brake when done otherwise off.</param>
-		public WaitHandle TimeSync(sbyte speed, Int16 turnRatio, UInt32 timeInMs, bool brake){
+
+        /// <summary>
+        /// Set Ramp up, constant and rampdown steps and speed of the outputs
+        /// </summary>
+        /// <param name="speed">Speed to use</param>
+        /// <param name="rampUpSteps">Steps used to ramp up</param>
+        /// <param name="constantSpeedSteps">Steps used for constant speed</param>
+        /// <param name="rampDownSteps">Steps used to ramp down</param>
+        /// <param name="brake">If set to <c>true</c> brake when done.</param>
+        public WaitHandle StepSync(sbyte speed, UInt32 rampUpSteps, UInt32 constantSpeedSteps, UInt32 rampDownSteps, bool brake)
+        {
+            StartPooling();
+            output.SetStepSpeed(speed, rampUpSteps, constantSpeedSteps, rampDownSteps, brake);
+            return WaitForMotorsToStop();
+        }
+
+        /// <summary>
+        /// Syncronise time between two motors
+        /// </summary>
+        /// <param name="speed">Speed of the motors.</param>
+        /// <param name="turnRatio">Turn ratio (-200 to 200).</param>
+        /// <param name="timeInMs">Time in ms to move.</param>
+        /// <param name="brake">If set to <c>true</c> motors will brake when done otherwise off.</param>
+        public WaitHandle TimeSync(sbyte speed, Int16 turnRatio, UInt32 timeInMs, bool brake){
 			StartPooling();
 			output.SetTimeSync(speed, turnRatio, timeInMs, brake);
 			return  WaitForMotorsToStop();

@@ -79,7 +79,7 @@ namespace MonoBrickFirmware.Movement
 		/// Speed of the vehicle -100 to 100
 		/// </param>
 		public void Backward(sbyte speed){
-			Backward((sbyte)-speed, 0, false);
+			Backward((sbyte)speed, 0, false);
 			motorSync.CancelPolling();
 		}
 	
@@ -416,8 +416,8 @@ namespace MonoBrickFirmware.Movement
 			}
 			return handle; 
 		}
-		
-		private WaitHandle Move(sbyte speed, UInt32 degrees, bool brake){
+     
+        private WaitHandle Move(sbyte speed, UInt32 degrees, bool brake){
 			WaitHandle handle = null;
 			if(!ReverseLeft && !ReverseRight){
 				handle = motorSync.StepSync(speed, 0, degrees, brake); 
